@@ -9,9 +9,10 @@ car_limit = 3
 #Replace with your ip address when you want to test it
 address = '129.8.226.210'
 counter = 0
-def newClient(conn, addr):
+
+def newCar(conn, addr):
     while counter < car_limit:
-        time.sleep(0.001)
+        time.sleep(0.0001)
     conn.send(b"Run")
     while True:
         data = conn.recv(4096)
@@ -27,4 +28,4 @@ while True:
     conn, addr = serv.accept()
     print("New Connection!")
     counter += 1
-    _thread.start_new_thread(newClient,(conn,addr))
+    _thread.start_new_thread(newCar,(conn,addr))
