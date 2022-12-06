@@ -12,11 +12,11 @@ cars             = []
 clients          = [] # Array of tuple such that (clientConnection, clientAddress)
 
 #Replace with your ip address when you want to test it
-address = '129.8.238.43'
+address = '192.168.1.245'
 
 def newCar(carConnection, carAddress, index):
-    # When we don't have enough cars wait until they're all connected
-    while len(clients) < client_limit:
+    # When we have no clients connected or our cars is not up to the limit
+    while len(clients) < 1 or len(cars) < car_limit:
         time.sleep(0.0001)
     # To the carConnection send a 'signal' for it to run.
     carConnection.send(b"Run")
@@ -42,18 +42,18 @@ def newCar(carConnection, carAddress, index):
 
 serv = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 serv.bind((address, 8080))
-# Listen for the three cars?
-# serv.listen(3)
 serv.listen(car_limit)
 
-flag = True
-while flag:
+while True:
     connection, address = serv.accept()
-    # Start with car connections then client connections
-    if len(cars) < car_limit:
+    # Connection will respond with its type to determine if it is a car or a client connecting
+    type = connection.recv(4096).decode()
+
+    if type == 'car' and len(cars) < car_limit:
         cars.append([])
         _thread.start_new_thread(newCar,(connection, address, len(cars) - 1))
-    else:
+
+    elif type == 'client':
         clients.append((connection, address))
 
 
