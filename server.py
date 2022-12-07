@@ -35,7 +35,10 @@ def newCar(carConnection, carAddress, index):
 
         # Send all our current data from this car thread to our clients
         for clientConn, clientAddr in clients:
-            clientConn.send(result.encode()) 
+            try:
+                clientConn.send(result.encode()) 
+            except:
+                print("Error occured when sending to client:")
 
     carConnection.close()
 
@@ -48,7 +51,7 @@ while True:
     connection, address = serv.accept()
     # Connection will respond with its type to determine if it is a car or a client connecting
     type = connection.recv(4096).decode()
-
+    print("Received Connection:", type)
     if type == 'car' and len(cars) < car_limit:
         cars.append([])
         _thread.start_new_thread(newCar,(connection, address, len(cars) - 1))
