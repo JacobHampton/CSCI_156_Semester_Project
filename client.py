@@ -1,25 +1,32 @@
 # Import the necessary modules
 import threading
 import tkinter as tk
+from tkinter import font
 import socket
 
 # Replace with your ip address when you want to test it
-address = '192.168.56.1'
+address = '192.168.1.245'
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect((address, 8080))
 client.send(b'client')
 
 # Create a Tkinter window
 root = tk.Tk()
-
+my_font = font.Font(family='Helvetica', size=20)
+my_header_font = font.Font(family='Helvetica', size=20, weight='bold')
 # Add a label to the window
-label = tk.Label(root, text='Waiting for data...')
+title = tk.Label(root, text='Times:', font=my_header_font)
+label = tk.Label(root, text='Waiting for data...', font=my_font)
+title.pack()
 label.pack()
 
 # Create a function that will be called when data is received
 def update_label(data):
   # Update the text of the label
-  label['text'] = data
+  if label['text'] == 'Waiting for data...':
+    label['text'] =  data + '\n'
+  else:
+    label['text'] =  label['text'] + data + '\n'
 
 # Create a function that will run in a separate thread and handle the socket
 # communication
