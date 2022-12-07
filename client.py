@@ -4,7 +4,7 @@ import tkinter as tk
 import socket
 
 # Replace with your ip address when you want to test it
-address = '192.168.1.245'
+address = '192.168.56.1'
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect((address, 8080))
 client.send(b'client')
